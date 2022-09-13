@@ -7,11 +7,14 @@ import {
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { plainToInstance } from "class-transformer";
-import { nextTick } from "process";
+
+export function Serialize(dto: any) {
+    return UseInterceptors(new SerializeInterceptor(dto))
+}
 
 export class SerializeInterceptor implements NestInterceptor {
     constructor(private dto: any) {}
-    
+
     intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
         // Run something here before a request is handled by the request handler
         
