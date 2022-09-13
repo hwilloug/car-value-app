@@ -16,6 +16,7 @@ import { UserDto } from './dtos/user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 
 @Controller('auth')
+@Serialize(UserDto)
 export class UsersController {
     constructor(private usersService: UsersService) {}
 
@@ -24,10 +25,8 @@ export class UsersController {
         return this.usersService.create(body.email, body.password)
     }
 
-    @Serialize(UserDto)
     @Get('/:id')
     async findUser(@Param('id') id: string) {
-        console.log('handler is running')
         const user = await this.usersService.findOne(parseInt(id))
         if (!user) {
             throw new NotFoundException('user not found')
@@ -35,19 +34,16 @@ export class UsersController {
         return user
     }
 
-    @Serialize(UserDto)
     @Get()
     findAllUsers(@Query('email') email: string) {
         return this.usersService.find(email)
     }
 
-    @Serialize(UserDto)
     @Delete('/:id')
     removeUser(@Param('id') id: string) {
         return this.usersService.remove(parseInt(id))
     }
 
-    @Serialize(UserDto)
     @Patch('/:id')
     updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
         return this.usersService.update(parseInt(id), body)
