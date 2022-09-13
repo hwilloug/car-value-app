@@ -8,12 +8,16 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { plainToInstance } from "class-transformer";
 
-export function Serialize(dto: any) {
+interface ClassConstructor {
+    new (...args: any[]): {}
+}
+
+export function Serialize(dto: ClassConstructor) {
     return UseInterceptors(new SerializeInterceptor(dto))
 }
 
 export class SerializeInterceptor implements NestInterceptor {
-    constructor(private dto: any) {}
+    constructor(private dto: ClassConstructor) {}
 
     intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
         // Run something here before a request is handled by the request handler
